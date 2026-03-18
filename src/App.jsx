@@ -217,12 +217,39 @@ function HomePage({ onNavigate }) {
   return (
     <div className="page">
       <div className="hero">
-        <div className="hero-emoji">🥝</div>
-        <h1 className="hero-title">
-          Kiwi
-          <br />
-          <span>Free Tours</span>
-        </h1>
+        <svg
+          width="200"
+          height="76"
+          viewBox="0 0 240 84"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ marginBottom: 20 }}
+        >
+          <text
+            x="120"
+            y="50"
+            fontFamily="'DM Sans','Helvetica Neue',sans-serif"
+            fontSize="50"
+            fontWeight="800"
+            fill="#4a7c59"
+            letterSpacing="-2"
+            textAnchor="middle"
+          >
+            kiwi
+          </text>
+          <rect x="62" y="56" width="116" height="5" rx="2.5" fill="#f5a623" />
+          <text
+            x="120"
+            y="76"
+            fontFamily="'DM Sans','Helvetica Neue',sans-serif"
+            fontSize="13"
+            fontWeight="500"
+            fill="#68b0ab"
+            letterSpacing="4"
+            textAnchor="middle"
+          >
+            free tours
+          </text>
+        </svg>
         <p className="hero-desc">
           Tours gratuitos en español con guías locales apasionados. Experiencias
           únicas, recuerdos para siempre.
@@ -721,7 +748,25 @@ export default function App() {
     <>
       <nav className="nav">
         <button className="nav-logo" onClick={() => setPage("home")}>
-          🥝 Kiwi Free Tours
+          <svg
+            width="80"
+            height="28"
+            viewBox="0 0 140 48"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <text
+              x="0"
+              y="34"
+              fontFamily="'DM Sans','Helvetica Neue',sans-serif"
+              fontSize="32"
+              fontWeight="800"
+              fill="#4a7c59"
+              letterSpacing="-1"
+            >
+              kiwi
+            </text>
+            <rect x="0" y="38" width="74" height="3" rx="1.5" fill="#f5a623" />
+          </svg>
         </button>
         <button
           className={`nav-btn${page === "cities" || page === "city" ? " active" : ""}`}
