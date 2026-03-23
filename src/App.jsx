@@ -180,6 +180,8 @@ function Footer() {
 function HomePage({ onNavigate }) {
   const [current, setCurrent] = useState(0);
   const swipeX = useRef(null);
+  const phoneWrapperRef = useRef(null);
+  const phoneTrackRef = useRef(null);
 
   useEffect(() => {
     const timer = setInterval(
@@ -187,6 +189,20 @@ function HomePage({ onNavigate }) {
       4500,
     );
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!phoneTrackRef.current || !phoneWrapperRef.current) return;
+    const cards = phoneTrackRef.current.children;
+    if (!cards.length) return;
+    const cardHeight = cards[0].offsetHeight + 8;
+    phoneWrapperRef.current.style.height = cardHeight * 2 - 8 + "px";
+    let phoneIdx = 0;
+    const phoneTimer = setInterval(() => {
+      phoneIdx = (phoneIdx + 1) % REVIEWS.length;
+      phoneTrackRef.current.style.transform = `translateY(-${phoneIdx * cardHeight}px)`;
+    }, 3000);
+    return () => clearInterval(phoneTimer);
   }, []);
 
   const prev = () =>
@@ -216,89 +232,181 @@ function HomePage({ onNavigate }) {
 
   return (
     <div className="page">
-      <div className="hero">
-        <svg
-          width="200"
-          height="76"
-          viewBox="0 0 240 84"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ marginBottom: 20 }}
-        >
-          <text
-            x="120"
-            y="50"
-            fontFamily="'DM Sans','Helvetica Neue',sans-serif"
-            fontSize="50"
-            fontWeight="800"
-            fill="#4a7c59"
-            letterSpacing="-2"
-            textAnchor="middle"
-          >
-            kiwi
-          </text>
-          <rect x="62" y="56" width="116" height="5" rx="2.5" fill="#f5a623" />
-          <text
-            x="120"
-            y="76"
-            fontFamily="'DM Sans','Helvetica Neue',sans-serif"
-            fontSize="13"
-            fontWeight="500"
-            fill="#68b0ab"
-            letterSpacing="4"
-            textAnchor="middle"
-          >
-            free tours
-          </text>
-        </svg>
-        <p className="hero-desc">
-          Tours gratuitos en español con guías locales apasionados. Experiencias
-          únicas, recuerdos para siempre.
-        </p>
-        <button className="btn-primary" onClick={() => onNavigate("cities")}>
-          Ver ciudades
-        </button>
-        <div className="hero-arrow">↓</div>
-      </div>
+      {/* ── DESKTOP: dos columnas ── */}
+      <div className="home-desktop">
+        <div className="hero">
+          <div className="hero-content">
+            <svg
+              width="220"
+              height="76"
+              viewBox="0 0 300 100"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ marginBottom: 20 }}
+            >
+              <text
+                x="0"
+                y="62"
+                fontFamily="'DM Sans','Helvetica Neue',sans-serif"
+                fontSize="64"
+                fontWeight="800"
+                fill="#4a7c59"
+                letterSpacing="-3"
+              >
+                kiwi
+              </text>
+              <rect x="0" y="70" width="148" height="6" rx="3" fill="#f5a623" />
+              <text
+                x="0"
+                y="92"
+                fontFamily="'DM Sans','Helvetica Neue',sans-serif"
+                fontSize="14"
+                fontWeight="500"
+                fill="#68b0ab"
+                letterSpacing="5"
+              >
+                free tours
+              </text>
+            </svg>
+            <p className="hero-desc">
+              Tours gratuitos en español con guías locales apasionados.
+              Experiencias únicas, recuerdos para siempre.
+            </p>
+            <button
+              className="btn-primary"
+              onClick={() => onNavigate("cities")}
+            >
+              Ver destinos
+            </button>
+          </div>
+        </div>
 
-      <div className="reviews-section">
-        <h2 className="section-title">Lo que dicen nuestros viajeros</h2>
-        <div className="carousel-wrapper">
-          <button className="car-side-btn" onClick={prev}>
-            ‹
-          </button>
-          <div
-            className="review-card"
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-          >
-            <div className="stars">
-              {"★".repeat(r.stars)}
-              {"☆".repeat(5 - r.stars)}
+        <div className="hero-phone-side">
+          <div className="phone-mockup">
+            <div className="phone-notch">
+              <div className="phone-notch-bar"></div>
             </div>
-            <p className="review-text">"{r.text}"</p>
-            <div className="reviewer">
-              <div className="avatar">{r.name[0]}</div>
-              <div>
-                <div className="reviewer-name">{r.name}</div>
-                <div className="reviewer-city">Tour en {r.city}</div>
+            <div className="phone-screen">
+              <div className="phone-screen-title">lo que dicen</div>
+              <div className="phone-cards-wrapper" ref={phoneWrapperRef}>
+                <div className="phone-cards-track" ref={phoneTrackRef}>
+                  {REVIEWS.map((rev, i) => (
+                    <div key={i} className="phone-card">
+                      <div className="phone-stars">
+                        {"★".repeat(rev.stars)}
+                        {"☆".repeat(5 - rev.stars)}
+                      </div>
+                      <p className="phone-text">"{rev.text}"</p>
+                      <div className="phone-author">
+                        <div className="phone-avatar">{rev.name[0]}</div>
+                        <div>
+                          <div className="phone-name">{rev.name}</div>
+                          <div className="phone-city">Tour en {rev.city}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-          <button className="car-side-btn" onClick={next}>
-            ›
+        </div>
+      </div>
+
+      {/* ── MÓVIL: hero + carrusel normal ── */}
+      <div className="home-mobile">
+        <div className="hero hero-mobile">
+          <svg
+            width="200"
+            height="76"
+            viewBox="0 0 240 84"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ marginBottom: 20 }}
+          >
+            <text
+              x="120"
+              y="50"
+              fontFamily="'DM Sans','Helvetica Neue',sans-serif"
+              fontSize="50"
+              fontWeight="800"
+              fill="#4a7c59"
+              letterSpacing="-2"
+              textAnchor="middle"
+            >
+              kiwi
+            </text>
+            <rect
+              x="62"
+              y="56"
+              width="116"
+              height="5"
+              rx="2.5"
+              fill="#f5a623"
+            />
+            <text
+              x="120"
+              y="76"
+              fontFamily="'DM Sans','Helvetica Neue',sans-serif"
+              fontSize="13"
+              fontWeight="500"
+              fill="#68b0ab"
+              letterSpacing="4"
+              textAnchor="middle"
+            >
+              free tours
+            </text>
+          </svg>
+          <p className="hero-desc">
+            Tours gratuitos en español con guías locales apasionados.
+            Experiencias únicas, recuerdos para siempre.
+          </p>
+          <button
+            className="btn-primary btn-primary-mobile"
+            onClick={() => onNavigate("cities")}
+          >
+            Ver destinos
           </button>
         </div>
-        <div className="dots-row">
-          {REVIEWS.map((_, i) => (
-            <button
-              key={i}
-              className={`dot${i === current ? " active" : ""}`}
-              style={{ width: i === current ? 24 : 8 }}
-              onClick={() => setCurrent(i)}
-            />
-          ))}
+
+        <div className="reviews-mobile">
+          <h2 className="section-title">Lo que dicen nuestros viajeros</h2>
+          <div className="carousel-wrapper">
+            <button className="car-side-btn" onClick={prev}>
+              ‹
+            </button>
+            <div
+              className="review-card"
+              onMouseDown={onMouseDown}
+              onMouseUp={onMouseUp}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+            >
+              <div className="stars">
+                {"★".repeat(r.stars)}
+                {"☆".repeat(5 - r.stars)}
+              </div>
+              <p className="review-text">"{r.text}"</p>
+              <div className="reviewer">
+                <div className="avatar">{r.name[0]}</div>
+                <div>
+                  <div className="reviewer-name">{r.name}</div>
+                  <div className="reviewer-city">Tour en {r.city}</div>
+                </div>
+              </div>
+            </div>
+            <button className="car-side-btn" onClick={next}>
+              ›
+            </button>
+          </div>
+          <div className="dots-row">
+            {REVIEWS.map((_, i) => (
+              <button
+                key={i}
+                className={`dot${i === current ? " active" : ""}`}
+                style={{ width: i === current ? 24 : 8 }}
+                onClick={() => setCurrent(i)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
